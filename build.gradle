@@ -1,0 +1,23 @@
+apply plugin: "java"
+apply plugin: "idea"
+
+// In this section you declare where to find the dependencies of your project
+repositories {
+    // Use jcenter for resolving your dependencies.
+    // You can declare any Maven/Ivy/file repository here.
+    jcenter()
+    // Standard Maven
+    mavenCentral()
+    maven {
+        url "https://repository.cloudera.com/artifactory/cloudera-repos/"
+    }
+}
+
+dependencies {
+
+    implementation 'junit:junit:4.12'
+    implementation 'org.junit.jupiter:junit-jupiter:5.4.2'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.22'
+    runtime "mysql:mysql-connector-java:8.0.15"
+
+}
