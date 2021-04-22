@@ -9,6 +9,9 @@ import wordtraitutil.iface.IWordTraitClient;
 import java.util.List;
 
 public class ExtractImplGroup {
+
+    /*=====Array extractors===========================================================================================*/
+
     public static abstract class ExtractList implements IExtract {
         protected final ITokenizer tokenizer;
         protected final char sep;
@@ -57,6 +60,8 @@ public class ExtractImplGroup {
         }
     }
 
+    /*=====Singular extractors========================================================================================*/
+
     public static class ExtractString implements IExtract {
         private static ExtractString instance;
 
@@ -86,6 +91,75 @@ public class ExtractImplGroup {
         public boolean getContent(IWordTraitClient client, String text) {
             client.receiveContent(Integer.parseInt(text));
             return true;
+        }
+    }
+
+    /*=====Quoted extractors==========================================================================================*/
+
+    public static abstract class ExtractQuotedBase implements IExtract {
+        protected final ITokenizer quoteTokenizer;
+        protected final String quote;
+
+        public ExtractQuotedBase() {
+            this.quote = "'";
+            quoteTokenizer = Tokenizer.builder().delimiters('\'').tokenizeDelimiter().
+                    keepEscapeSymbol().build();
+        }
+        protected String unquote(String text){
+            List<String> tok = quoteTokenizer.setText(text).parse().toList();
+            if(tok.size() == 3 && quote.equals(tok.get(0)) &&  quote.equals(tok.get(2))){
+                return tok.get(1);
+            }
+            return null;
+        }
+    }
+
+    public static class ExtractQuoted extends ExtractQuotedBase {
+        private static ExtractQuoted instance;
+
+        public static ExtractQuoted initInstance(){
+            return (instance == null)? (instance = new ExtractQuoted()): instance;
+        }
+
+        private ExtractQuoted() {}
+
+        @Override
+        public boolean getContent(IWordTraitClient client, String text) {
+            String unquote = this.unquote(text);
+            if(unquote != null){
+                client.receiveContent(unquote);
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public static class ExtractQuotedList extends ExtractQuotedBase {
+        private static ExtractQuotedList instance;
+
+        public static ExtractQuotedList initInstance(){
+            return (instance == null)? (instance = new ExtractQuotedList()): instance;
+        }
+
+        private final ITokenizer listTokenizer;
+
+        private ExtractQuotedList() {
+            listTokenizer = Tokenizer.builder().delimiters(',').skipSymbols('\'').keepSkipSymbol().
+                    keepEscapeSymbol().build();
+        }
+
+        @Override
+        public boolean getContent(IWordTraitClient client, String text) {
+            List<String> quotedList = listTokenizer.setText(text).parse().toList();
+            String[] unquotedList = new String[quotedList.size()];
+            for(int i = 0; i < quotedList.size(); i++){
+                unquotedList[i] = this.unquote(quotedList.get(i));
+                if(unquotedList[i] == null){
+                    return false;
+                }
+            }
+            client.receiveContent(unquotedList);
+            return false;
         }
     }
 }

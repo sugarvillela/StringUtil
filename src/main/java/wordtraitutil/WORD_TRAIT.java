@@ -13,8 +13,8 @@ import static wordtraitutil.impl.ExtractImplGroup.*;
 public enum WORD_TRAIT {
     NUM_PAR         ("-'-*-,-.-:-A+C+N-[-_", ExtractNumber.initInstance()),   // "CN"
     NUM_LIST        ("-'-*+,-.-:-A+C+N-[-_", ExtractNumbers.initInstance(',')),   // ",CN"
-    STR_PAR         ("+'-*-,-.-:-A+C-N-[-_", ExtractString.initInstance()),   // "'C"
-    STR_LIST        ("+'-*+,-.-:-A+C-N-[-_", ExtractStrings.initInstance(',')),   // "',C"
+    STR_PAR         ("+'-*-,-.-:-A+C-N-[-_", ExtractQuoted.initInstance()),   // "'C"
+    STR_LIST        ("+'-*+,-.-:-A+C-N-[-_", ExtractQuotedList.initInstance()),   // "',C"
     ID_PAR          ("-'-*-,-.-:+A+C.N-[._", ExtractString.initInstance()),   // "ACN_"
     ID_LIST         ("-'-*+,-.-:+A+C.N-[._", ExtractStrings.initInstance(',')),   // ",ACN_"
     ID_SEP          ("-'-*-,+.-:+A+C.N-[._", ExtractStrings.initInstance('.')),   // ".ACN_"

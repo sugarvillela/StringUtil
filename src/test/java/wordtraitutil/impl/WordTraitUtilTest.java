@@ -285,13 +285,13 @@ class WordTraitUtilTest {
 
         text = "'a'"; // string
         WORD_TRAIT.tryParse(client, text);
-        expected = "strings=['a']|numbers=null|wordTraitEnum=STR_PAR";
+        expected = "strings=[a]|numbers=null|wordTraitEnum=STR_PAR";
         actual = client.toString();
         Assertions.assertEquals(expected, actual);
 
         text = "'Larry','Moe','Curly'"; // string list
         WORD_TRAIT.tryParse(client, text);
-        expected = "strings=['Larry', 'Moe', 'Curly']|numbers=null|wordTraitEnum=STR_LIST";
+        expected = "strings=[Larry, Moe, Curly]|numbers=null|wordTraitEnum=STR_LIST";
         actual = client.toString();
         Assertions.assertEquals(expected, actual);
 
