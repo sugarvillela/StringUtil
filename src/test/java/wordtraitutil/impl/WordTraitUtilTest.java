@@ -119,9 +119,9 @@ class WordTraitUtilTest {
     void givenFormattedString_sortInString(){
         ITraitPatternUtil traitPatternUtil = TraitPatternUtil.initInstance();
         String text, expected, actual;
-        text = ".a-c+b+e.d";
-        expected = ".a+b-c.d+e";
-        actual = traitPatternUtil.sortPattern(text);
+        text = "vtdajcrwb";
+        expected = "abcdjrtvw";
+        actual = traitPatternUtil.sortText(text);
         Assertions.assertEquals(expected, actual);
     }
 
@@ -197,115 +197,151 @@ class WordTraitUtilTest {
 
         text = "23";// num par
         expected = NUM_PAR;
-        actual = wordTrait.setText(text).parse().getFoundPattern();
+        actual = WORD_TRAIT.fromTraitText(wordTrait.setText(text).parse().getFoundTraits());
         Assertions.assertEquals(expected, actual);
 
         text = "2,3,4"; // num list
         expected = NUM_LIST;
-        actual = wordTrait.setText(text).parse().getFoundPattern();
+        actual = WORD_TRAIT.fromTraitText(wordTrait.setText(text).parse().getFoundTraits());
         Assertions.assertEquals(expected, actual);
 
         text = "'a'"; // string
         expected = STR_PAR;
-        actual = wordTrait.setText(text).parse().getFoundPattern();
+        actual = WORD_TRAIT.fromTraitText(wordTrait.setText(text).parse().getFoundTraits());
         Assertions.assertEquals(expected, actual);
 
         text = "'Larry','Moe','Curly'"; // string list
         expected = STR_LIST;
-        actual = wordTrait.setText(text).parse().getFoundPattern();
+        actual = WORD_TRAIT.fromTraitText(wordTrait.setText(text).parse().getFoundTraits());
         Assertions.assertEquals(expected, actual);
 
         text = "abc_1"; // identifier
         expected = ID_PAR;
-        actual = wordTrait.setText(text).parse().getFoundPattern();
+        actual = WORD_TRAIT.fromTraitText(wordTrait.setText(text).parse().getFoundTraits());
         Assertions.assertEquals(expected, actual);
 
         text = "MyId"; // identifier
         expected = ID_PAR;
-        actual = wordTrait.setText(text).parse().getFoundPattern();
+        actual = WORD_TRAIT.fromTraitText(wordTrait.setText(text).parse().getFoundTraits());
         Assertions.assertEquals(expected, actual);
 
         text = "id1"; // identifier
         expected = ID_PAR;
-        actual = wordTrait.setText(text).parse().getFoundPattern();
+        actual = WORD_TRAIT.fromTraitText(wordTrait.setText(text).parse().getFoundTraits());
         Assertions.assertEquals(expected, actual);
 
         text = "A,B_2,myVar"; // identifier list
         expected = ID_LIST;
-        actual = wordTrait.setText(text).parse().getFoundPattern();
+        actual = WORD_TRAIT.fromTraitText(wordTrait.setText(text).parse().getFoundTraits());
         Assertions.assertEquals(expected, actual);
 
         text = "A,B,myVar"; // identifier list
         expected = ID_LIST;
-        actual = wordTrait.setText(text).parse().getFoundPattern();
+        actual = WORD_TRAIT.fromTraitText(wordTrait.setText(text).parse().getFoundTraits());
         Assertions.assertEquals(expected, actual);
 
         text = "path1.path2.path_3";// identifier path
         expected = ID_SEP;
-        actual = wordTrait.setText(text).parse().getFoundPattern();
+        actual = WORD_TRAIT.fromTraitText(wordTrait.setText(text).parse().getFoundTraits());
         Assertions.assertEquals(expected, actual);
 
         text = "2:3"; // numeric range
         expected = NUM_RANGE;
-        actual = wordTrait.setText(text).parse().getFoundPattern();
+        actual = WORD_TRAIT.fromTraitText(wordTrait.setText(text).parse().getFoundTraits());
         Assertions.assertEquals(expected, actual);
 
         text = "*abc_1"; // id access
         expected = STAR_ID;
-        actual = wordTrait.setText(text).parse().getFoundPattern();
+        actual = WORD_TRAIT.fromTraitText(wordTrait.setText(text).parse().getFoundTraits());
         Assertions.assertEquals(expected, actual);
 
         text = "*[2]"; // fx access
         expected = STAR_NUM;
-        actual = wordTrait.setText(text).parse().getFoundPattern();
+        actual = WORD_TRAIT.fromTraitText(wordTrait.setText(text).parse().getFoundTraits());
         Assertions.assertEquals(expected, actual);
 
         text = "*[8:11]"; // id access
         expected = STAR_RANGE;
-        actual = wordTrait.setText(text).parse().getFoundPattern();
+        actual = WORD_TRAIT.fromTraitText(wordTrait.setText(text).parse().getFoundTraits());
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
     void givenText_extractContent(){
         IWordTraitClient client = new TestClient();
-        String text;
+        String text, expected, actual;
 
         text = "23";
         WORD_TRAIT.tryParse(client, text);
+        expected = "strings=null|numbers=[23]|wordTraitEnum=NUM_PAR";
+        actual = client.toString();
+        Assertions.assertEquals(expected, actual);
 
         text = "2,3,4"; // num list
         WORD_TRAIT.tryParse(client, text);
+        expected = "strings=null|numbers=[2, 3, 4]|wordTraitEnum=NUM_LIST";
+        actual = client.toString();
+        Assertions.assertEquals(expected, actual);
 
         text = "'a'"; // string
         WORD_TRAIT.tryParse(client, text);
+        expected = "strings=['a']|numbers=null|wordTraitEnum=STR_PAR";
+        actual = client.toString();
+        Assertions.assertEquals(expected, actual);
 
         text = "'Larry','Moe','Curly'"; // string list
         WORD_TRAIT.tryParse(client, text);
+        expected = "strings=['Larry', 'Moe', 'Curly']|numbers=null|wordTraitEnum=STR_LIST";
+        actual = client.toString();
+        Assertions.assertEquals(expected, actual);
 
         text = "abc_1"; // identifier
         WORD_TRAIT.tryParse(client, text);
+        expected = "strings=[abc_1]|numbers=null|wordTraitEnum=ID_PAR";
+        actual = client.toString();
+        Assertions.assertEquals(expected, actual);
 
         text = "MyId"; // identifier
         WORD_TRAIT.tryParse(client, text);
+        expected = "strings=[MyId]|numbers=null|wordTraitEnum=ID_PAR";
+        actual = client.toString();
+        Assertions.assertEquals(expected, actual);
 
         text = "id1"; // identifier
         WORD_TRAIT.tryParse(client, text);
+        expected = "strings=[id1]|numbers=null|wordTraitEnum=ID_PAR";
+        actual = client.toString();
+        Assertions.assertEquals(expected, actual);
 
         text = "A,B_2,myVar"; // identifier list
         WORD_TRAIT.tryParse(client, text);
+        expected = "strings=[A, B_2, myVar]|numbers=null|wordTraitEnum=ID_LIST";
+        actual = client.toString();
+        Assertions.assertEquals(expected, actual);
 
         text = "A,B,myVar"; // identifier list
         WORD_TRAIT.tryParse(client, text);
+        expected = "strings=[A, B, myVar]|numbers=null|wordTraitEnum=ID_LIST";
+        actual = client.toString();
+        Assertions.assertEquals(expected, actual);
 
         text = "path1.path2.path_3";// identifier path
         WORD_TRAIT.tryParse(client, text);
+        expected = "strings=[path1, path2, path_3]|numbers=null|wordTraitEnum=ID_SEP";
+        actual = client.toString();
+        Assertions.assertEquals(expected, actual);
 
         text = "2:3"; // numeric range
         WORD_TRAIT.tryParse(client, text);
+        expected = "strings=null|numbers=[2, 3]|wordTraitEnum=NUM_RANGE";
+        actual = client.toString();
+        Assertions.assertEquals(expected, actual);
 
         text = "*abc_1"; // id access
         WORD_TRAIT.tryParse(client, text);
+        expected = "strings=[*abc_1]|numbers=null|wordTraitEnum=STAR_ID";
+        actual = client.toString();
+        Assertions.assertEquals(expected, actual);
 
 //        text = "*[2]"; // fx access
 //        WORD_TRAIT.tryParse(client, text);
@@ -315,23 +351,39 @@ class WordTraitUtilTest {
     }
 
     public static class TestClient implements IWordTraitClient {
+        private String[] strings;
+        private int[] numbers;
+        private WORD_TRAIT wordTraitEnum;
 
         @Override
         public void receiveContent(String... content) {
-            System.out.println("receive content: string");
-            System.out.println(Arrays.toString(content));
+            strings = content;
+            numbers = null;
+            //System.out.println("receive content: string");
+            //System.out.println(Arrays.toString(content));
         }
 
         @Override
         public void receiveContent(int... content) {
-            System.out.println("receive content: int");
-            System.out.println(Arrays.toString(content));
+            numbers = content;
+            strings = null;
+            //System.out.println("receive content: int");
+            //System.out.println(Arrays.toString(content));
         }
 
         @Override
         public void receiveContent(WORD_TRAIT content) {
-            System.out.println("receive content: enum");
-            System.out.println(content);
+            wordTraitEnum = content;
+            //System.out.println("receive content: enum");
+            //System.out.println(content);
+        }
+
+        @Override
+        public String toString() {
+            return
+                    "strings=" + Arrays.toString(strings) +
+                    "|numbers=" + Arrays.toString(numbers) +
+                    "|wordTraitEnum=" + wordTraitEnum;
         }
     }
 }

@@ -24,7 +24,8 @@ public enum WORD_TRAIT {
     STAR_RANGE      ("-'+*-,-.+:-A+C+N+[-_", ExtractNumbers.initInstance(':')),   // "*:CN["
     ;
 
-    private static final IWordTraitParser wordTraitParser = WordTraitParser.builder().skipSymbols('\'').keepEscapeSymbol().
+    private static final IWordTraitParser wordTraitParser = WordTraitParser.builder().
+        skipSymbols('\'').keepEscapeSymbol().
         traits(
                 new CharTraitImplGroup.CharTrait('\''),
                 new CharTraitImplGroup.CharTrait('.'),
@@ -48,6 +49,10 @@ public enum WORD_TRAIT {
         this.p = traitPatternUtil.sortPattern(p);
     }
 
+    public static IWordTraitParser getWordTraitParser(){
+        return wordTraitParser;
+    }
+
     public static boolean tryParse(IWordTraitClient client, String text) {
         String traitText = wordTraitParser.setText(text).parse().getFoundTraits();
         WORD_TRAIT traitEnum = fromTraitText(traitText);
@@ -58,20 +63,12 @@ public enum WORD_TRAIT {
         return false;
     }
 
-    public static IWordTraitParser getWordTraitParser(){
-        return wordTraitParser;
-    }
-
     public static WORD_TRAIT fromTraitText(String text){
-        for(WORD_TRAIT traitPatternEnum : values()){
-            if(traitPatternEnum.matchTraitPattern(text)){
-                return traitPatternEnum;
+        for(WORD_TRAIT wordTraitEnum : values()){
+            if(wordTraitEnum.traitPatternUtil.match(text, wordTraitEnum.p)){
+                return wordTraitEnum;
             }
         }
         return null;
-    }
-
-    public boolean matchTraitPattern(String text){
-        return traitPatternUtil.match(text, this.p);
     }
 }

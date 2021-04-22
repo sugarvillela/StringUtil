@@ -1,6 +1,5 @@
 package wordtraitutil.impl;
 
-import wordtraitutil.WORD_TRAIT;
 import wordtraitutil.iface.ICharTrait;
 import wordtraitutil.iface.IWordTraitParser;
 
@@ -167,11 +166,6 @@ public class WordTraitParser implements IWordTraitParser {
             }
         }
         return new String(chars);
-    }
-
-    @Override
-    public WORD_TRAIT getFoundPattern() {
-        return WORD_TRAIT.fromTraitText(this.getFoundTraits());
     }
 
     public static IBuilder builder(){

@@ -13,8 +13,6 @@ public interface IWordTraitParser {
 
     String getFoundTraits();
 
-    WORD_TRAIT getFoundPattern();
-
     interface IBuilder {
 
         IBuilder traits(ICharTrait... traits);

@@ -9,31 +9,6 @@ import wordtraitutil.iface.IWordTraitClient;
 import java.util.List;
 
 public class ExtractImplGroup {
-    public static class ExtractBase implements IExtract {
-        protected final IWordTraitParser wordTrait;
-
-        public ExtractBase() {
-            wordTrait = WordTraitParser.builder().skipSymbols('\'').
-                traits(
-                        new CharTraitImplGroup.CharTrait('\''),
-                        new CharTraitImplGroup.CharTrait('.'),
-                        new CharTraitImplGroup.CharTrait(','),
-                        new CharTraitImplGroup.CharTrait(':'),
-                        new CharTraitImplGroup.CharTrait('*'),
-                        new CharTraitImplGroup.CharTrait('['),
-                        new CharTraitImplGroup.CharTrait('_'),
-                        new CharTraitImplGroup.CharTraitAlpha('A'),
-                        new CharTraitImplGroup.CharTraitVisibleAscii('C'),
-                        new CharTraitImplGroup.CharTraitNumeric('N')
-                ).build();
-        }
-
-        @Override
-        public boolean getContent(IWordTraitClient client, String text) {
-            return false;
-        }
-    }
-
     public static abstract class ExtractList implements IExtract {
         protected final ITokenizer tokenizer;
         protected final char sep;
@@ -46,7 +21,6 @@ public class ExtractImplGroup {
     }
 
     public static class ExtractStrings extends ExtractList {
-
         public static ExtractStrings initInstance(char sep){
             return new ExtractStrings(sep);
         }
@@ -63,7 +37,6 @@ public class ExtractImplGroup {
     }
 
     public static class ExtractNumbers extends ExtractList {
-
         public static ExtractNumbers initInstance(char sep){
             return new ExtractNumbers(sep);
         }
@@ -115,5 +88,4 @@ public class ExtractImplGroup {
             return true;
         }
     }
-
 }
